@@ -65,6 +65,7 @@ body {
   justify-content: center;
   background: linear-gradient(45deg, var(--primary), #34495E);
   padding: 2rem;
+  scroll-margin-top: 70px;
 }
 
 .hero-content {
@@ -100,6 +101,7 @@ body {
   padding: 5rem 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  scroll-margin-top: 70px;
 }
 
 .services h2 {
@@ -132,6 +134,86 @@ body {
   margin-bottom: 1rem;
 }
 
+.about-section {
+  padding: 5rem 2rem;
+  background: white;
+  scroll-margin-top: 70px;
+}
+
+.about-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.about-text {
+  padding-right: 2rem;
+}
+
+.about-text h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+}
+
+.about-text p {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.stat-card {
+  background: var(--light);
+  padding: 1.5rem;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.about-image-container {
+  position: relative;
+  height: 400px;
+}
+
+.about-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(45deg, var(--accent), var(--primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.team-member {
+  margin-top: 4rem;
+  text-align: center;
+}
+
+.team-member img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  border: 5px solid var(--accent);
+}
+
 @media (max-width: 768px) {
   .nav-links {
     display: none;
@@ -143,6 +225,14 @@ body {
   
   .hero p {
     font-size: 1rem;
+  }
+  
+  .about-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .about-text {
+    padding-right: 0;
   }
 }
 
@@ -163,7 +253,7 @@ body {
 
 <nav class="navbar">
   <div class="navbar-content">
-    <a href="#" class="logo">JL Design</a>
+    <a href="https://jldesign.com" class="logo">JL Design</a>
     <div class="nav-links">
       <a href="#home">Home</a>
       <a href="#services">Serviços</a>
@@ -207,6 +297,39 @@ body {
   </div>
 </section>
 
+<section class="about-section" id="about">
+  <div class="about-container">
+    <div class="about-text">
+      <h2>Nossa História</h2>
+      <p>Desde 2015, a JL Design tem sido pioneira em transformar a presença digital de empresas em todo o Brasil. Nossa jornada começou com uma visão simples: tornar o marketing digital acessível e eficiente para empresas de todos os tamanhos.</p>
+      <p>Com uma equipe altamente qualificada e apaixonada por inovação, desenvolvemos soluções personalizadas que impactam positivamente os resultados de nossos clientes.</p>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">5+</div>
+          <div>Projetos Entregues</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">98%</div>
+          <div>Clientes Satisfeitos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">1+</div>
+          <div>Especialistas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">3</div>
+          <div>Anos de Experiência</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-image-container">
+      <div class="about-image">
+        <i class="fas fa-users" style="font-size: 8rem; color: white;"></i>
+      </div>
+    </div>
+  </div>
+</section>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Smooth scroll para links internos
@@ -219,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Animação de entrada para cards de serviço
+    // Animação de entrada para cards de serviço e stats
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -229,11 +352,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    document.querySelectorAll('.service-card').forEach((card) => {
+    document.querySelectorAll('.service-card, .stat-card').forEach((card) => {
         card.style.opacity = 0;
         card.style.transform = 'translateY(50px)';
         card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
         observer.observe(card);
+    });
+
+    // Contador animado para os números estatísticos
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = entry.target;
+                const value = parseInt(target.textContent);
+                let current = 0;
+                const increment = value / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= value) {
+                        target.textContent = value + (target.textContent.includes('+') ? '+' : '');
+                        clearInterval(timer);
+                    } else {
+                        target.textContent = Math.ceil(current);
+                    }
+                }, 20);
+                statsObserver.unobserve(target);
+            }
+        });
+    });
+
+    document.querySelectorAll('.stat-number').forEach(stat => {
+        statsObserver.observe(stat);
     });
 });
 </script>
